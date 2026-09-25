@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Student Result Search</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(
+                135deg,
+                #0f172a,
+                #1e1b4b,
+                #111827
+            );
+            color: #f8fafc;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: auto;
+        }
+
+        /* Heading */
+        h1 {
+            text-align: center;
+            font-size: 38px;
+            font-weight: 700;
+            margin-bottom: 35px;
+
+            background: linear-gradient(
+                90deg,
+                #60a5fa,
+                #a78bfa
+            );
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+
+            letter-spacing: 1px;
+        }
+
+        /* Search Box */
+        .search-box {
+            display: flex;
+            gap: 12px;
+            padding: 25px;
+
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+
+            border-radius: 18px;
+
+            backdrop-filter: blur(15px);
+
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+
+            margin-bottom: 30px;
+        }
+
+        /* Input */
+        input {
+            flex: 1;
+            padding: 15px 18px;
+
+            font-size: 15px;
+            color: white;
+
+            background: rgba(15, 23, 42, 0.8);
+
+            border: 1px solid #475569;
+            border-radius: 10px;
+
+            outline: none;
+
+            transition: 0.3s;
+        }
+
+        input::placeholder {
+            color: #94a3b8;
+        }
+
+        input:focus {
+            border-color: #60a5fa;
+
+            box-shadow: 0 0 15px rgba(96, 165, 250, 0.3);
+        }
+
+        /* Button */
+        button {
+            padding: 15px 25px;
+
+            font-size: 15px;
+            font-weight: 600;
+
+            color: white;
+
+            background: linear-gradient(
+                135deg,
+                #3b82f6,
+                #6366f1
+            );
+
+            border: none;
+            border-radius: 10px;
+
+            cursor: pointer;
+
+            transition: all 0.3s ease;
+
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+
+            background: linear-gradient(
+                135deg,
+                #2563eb,
+                #4f46e5
+            );
+
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.5);
+        }
+
+        button:active {
+            transform: scale(0.97);
+        }
+
+        /* Student Result Card */
+        .student-card {
+            padding: 30px;
+
+            background: rgba(255, 255, 255, 0.07);
+
+            border: 1px solid rgba(255, 255, 255, 0.15);
+
+            border-radius: 20px;
+
+            backdrop-filter: blur(15px);
+
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+
+            animation: fadeIn 0.5s ease;
+
+            overflow-x: auto;
+        }
+
+        /* Student Name */
+        .student-card h2 {
+            font-size: 28px;
+            color: #93c5fd;
+
+            margin-bottom: 20px;
+
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+
+            padding-bottom: 15px;
+        }
+
+        /* Student Details */
+        .student-card p {
+            font-size: 16px;
+
+            color: #cbd5e1;
+
+            margin: 12px 0;
+        }
+
+        .student-card strong {
+            color: #f8fafc;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+
+            margin-top: 25px;
+
+            border-collapse: collapse;
+
+            border-radius: 12px;
+
+            overflow: hidden;
+
+            background: rgba(15, 23, 42, 0.6);
+        }
+
+        /* Table Header */
+        th {
+            background: linear-gradient(
+                135deg,
+                #2563eb,
+                #4f46e5
+            );
+
+            color: white;
+
+            padding: 16px;
+
+            font-size: 15px;
+
+            text-align: left;
+        }
+
+        /* Table Cells */
+        td {
+            padding: 15px;
+
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+            color: #cbd5e1;
+
+            font-size: 14px;
+        }
+
+        /* Table Hover */
+        tr {
+            transition: 0.3s;
+        }
+
+        tr:hover {
+            background: rgba(96, 165, 250, 0.1);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Student Not Found */
+        .not-found {
+            padding: 20px;
+
+            margin-top: 20px;
+
+            text-align: center;
+
+            color: #fca5a5;
+
+            background: rgba(239, 68, 68, 0.1);
+
+            border: 1px solid rgba(239, 68, 68, 0.4);
+
+            border-radius: 12px;
+
+            font-size: 16px;
+
+            animation: fadeIn 0.4s ease;
+        }
+
+        /* Fade Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 600px) {
+
+            body {
+                padding: 25px 15px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .search-box {
+                flex-direction: column;
+                padding: 20px;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            .student-card {
+                padding: 20px;
+            }
+
+            .student-card h2 {
+                font-size: 23px;
+            }
+
+            th,
+            td {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>🎓 Student Result Portal</h1>
+
+        <div class="search-box">
+
+            <input
+                type="text"
+                id="register_number"
+                placeholder="Enter Register Number">
+
+            <button onclick="searchResult()">
+                Search Result
+            </button>
+
+        </div>
+
+        <div id="result"></div>
+
+    </div>
+
+    <script>
+
+        async function searchResult() {
+
+            let registerNumber =
+                document.getElementById(
+                    "register_number"
+                ).value;
+
+            let response =
+                await fetch(
+                    "http://127.0.0.1:8000/results"
+                );
+
+            let students =
+                await response.json();
+
+            let student =
+                students.find(
+                    student =>
+                        student.register_number === registerNumber
+                );
+
+            if (student) {
+
+                let output = `
+                    <div class="student-card">
+
+                        <h2>${student.student_name}</h2>
+
+                        <p>
+                            <strong>Register Number:</strong>
+                            ${student.register_number}
+                        </p>
+
+                        <p>
+                            <strong>Department:</strong>
+                            ${student.department}
+                        </p>
+
+                        <table>
+
+                            <tr>
+                                <th>Subject</th>
+                                <th>Grade</th>
+                            </tr>
+                `;
+
+                student.subjects.forEach(subject => {
+
+                    output += `
+                        <tr>
+                            <td>${subject.subject_name}</td>
+                            <td>${subject.grade}</td>
+                        </tr>
+                    `;
+
+                });
+
+                output += `
+                        </table>
+                    </div>
+                `;
+
+                document.getElementById("result").innerHTML =
+                    output;
+
+            } else {
+
+                document.getElementById("result").innerHTML =
+                    '<div class="not-found">Student Not Found</div>';
+
+            }
+
+        }
+
+    </script>
+
+</body>
+
+</html>
